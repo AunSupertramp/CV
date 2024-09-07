@@ -6,10 +6,10 @@ import { useGLTF, CameraControls } from '@react-three/drei';
 import * as THREE from 'three';
 
 export function Airplane3D(props: any) {
-  const groupRef = useRef<THREE.Group>();
-  const controlsRef = useRef<CameraControls>();
+  const groupRef = useRef<THREE.Group>(null);
+  const controlsRef = useRef<CameraControls>(null);
   const { scene, nodes, materials } = useGLTF('/airplane.glb') as any;
-  const { camera } = useThree();
+  const { camera } = useThree<{ camera: THREE.PerspectiveCamera }>();
 
   useEffect(() => {
     if (scene && controlsRef.current) {
