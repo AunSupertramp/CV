@@ -5,7 +5,7 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { useGLTF, CameraControls } from '@react-three/drei';
 import * as THREE from 'three';
 
-export function Airplane3D(props: any) {
+export default function Airplane3D(props: any) {
   const groupRef = useRef<THREE.Group>(null);
   const controlsRef = useRef<CameraControls>(null);
   const { scene, nodes, materials } = useGLTF('/airplane.glb') as any;
