@@ -1,0 +1,46 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    /* Add other color variables here */
+  }
+}
+
+@layer utilities {
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+
+  .bg-rainbow {
+    background: linear-gradient(
+      to right,
+      #ff0000,
+      #ff7f00,
+      #ffff00,
+      #00ff00,
+      #0000ff,
+      #8b00ff
+    );
+    background-size: 400% 400%;
+  }
+
+  @keyframes rainbow-move {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  .animate-rainbow-move {
+    animation: rainbow-move 3s linear infinite;
+  }
+}
