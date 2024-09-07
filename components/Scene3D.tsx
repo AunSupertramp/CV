@@ -3,10 +3,21 @@
 import dynamic from 'next/dynamic';
 import { Canvas } from '@react-three/fiber'
 import { Environment, Lightformer } from '@react-three/drei'
+import { Suspense } from 'react';
+import * as THREE from 'three';
 
 const Airplane3D = dynamic(() => import('./Airplane3D'), {
   ssr: false,
 });
+
+function LoadingFallback() {
+  return (
+    <mesh>
+      <boxGeometry args={[1, 1, 1]} />
+      <meshStandardMaterial color="hotpink" />
+    </mesh>
+  );
+}
 
 export default function Scene3D() {
   return (
@@ -18,7 +29,9 @@ export default function Scene3D() {
         <Environment preset="city">
           <Lightformer intensity={4} rotation-x={Math.PI / 2} position={[0, 5, -9]} scale={[10, 10, 1]} />
         </Environment>
-        <Airplane3D />
+        <Suspense fallback={<LoadingFallback />}>
+          <Airplane3D />
+        </Suspense>
       </Canvas>
     </div>
   )

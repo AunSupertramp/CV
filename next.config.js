@@ -10,11 +10,15 @@ const nextConfig = {
       test: /\.glb$/,
       use: {
         loader: 'file-loader',
+        options: {
+          publicPath: '/_next/static/images',
+          outputPath: 'static/images/',
+        },
       },
     })
     return config
   },
-  transpilePackages: ['three'],
+  transpilePackages: ['three', '@react-three/fiber', '@react-three/drei'],
 }
 
 module.exports = nextConfig

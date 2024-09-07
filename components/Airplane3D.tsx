@@ -2,14 +2,14 @@
 
 import React, { useRef, useEffect } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
-import { useGLTF, CameraControls } from '@react-three/drei';
+import { useGLTF, CameraControls, PerspectiveCamera } from '@react-three/drei';
 import * as THREE from 'three';
 
 export default function Airplane3D(props: any) {
   const groupRef = useRef<THREE.Group>(null);
   const controlsRef = useRef<CameraControls>(null);
   const { scene, nodes, materials } = useGLTF('/airplane.glb') as any;
-  const { camera } = useThree<{ camera: THREE.PerspectiveCamera }>();
+  const { camera, set } = useThree();
 
   useEffect(() => {
     if (scene && controlsRef.current) {
@@ -20,18 +20,23 @@ export default function Airplane3D(props: any) {
       const center = box.getCenter(new THREE.Vector3());
       const size = box.getSize(new THREE.Vector3());
       const maxDim = Math.max(size.x, size.y, size.z);
-      const fov = camera.fov * (Math.PI / 180);
-      let cameraZ = Math.abs(maxDim / Math.tan(fov/2))/2; 
       
       // Set isometric camera position
+      const aspect = 1; // Assuming a square viewport, adjust if needed
+      const distance = maxDim * 2; // Adjust this multiplier as needed for zoom level
       const isometricAngle = Math.PI / 4; // 45 degrees
-      const cameraX = cameraZ * Math.cos(isometricAngle);
-      const cameraY = cameraZ * Math.sin(isometricAngle);
+
+      const cameraX = distance * Math.cos(isometricAngle);
+      const cameraY = distance * Math.sin(isometricAngle);
+      const cameraZ = distance;
 
       // Set camera position and target
       camera.position.set(cameraX, cameraY, cameraZ);
       camera.lookAt(center);
-      camera.updateProjectionMatrix();
+      
+      if (camera instanceof THREE.PerspectiveCamera) {
+        camera.updateProjectionMatrix();
+      }
 
       // Fit controls
       controlsRef.current.setLookAt(
@@ -49,11 +54,17 @@ export default function Airplane3D(props: any) {
   });
 
   if (!scene) {
-    return <mesh><boxGeometry args={[1, 1, 1]} /><meshStandardMaterial color="red" /></mesh>;
+    return (
+      <mesh>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshNormalMaterial />
+      </mesh>
+    );
   }
 
   return (
     <>
+      <PerspectiveCamera makeDefault />
       <CameraControls ref={controlsRef} />
       <group ref={groupRef} {...props}>
         <primitive 
